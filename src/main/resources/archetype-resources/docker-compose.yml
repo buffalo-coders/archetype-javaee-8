@@ -17,27 +17,44 @@
 # under the License.
 #
 
-default: verify
+version: '3'
 
-.PHONY: clean
-clean:
-	@mvn clean
+services:
 
-.PHONY: deploy-local
-deploy-local:
-	@mvn -Dmaven.test.skip=true -DskipTests=true -DaltDeploymentRepository=releases::default::http://archiva.buffalo-coders.org:7000/repository/internal/ deploy
+  mysql:
+    image: buffalo-coders/mysql
+    ports:
+     - "13306:3306"
+    networks:
+      - ${rootArtifactId}
+    environment:
+      - MYSQL_DATABASE=wildfly
+    volumes:
+      - ~/devops/mysql/${rootArtifactId}:/var/lib/mysql
 
-.PHONY: install
-install:
-	@mvn install
+  backend:
+    image: ${rootArtifactId}-backend
+    ports:
+     - "18080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - ${rootArtifactId}
+    environment:
+      - JDBC_URL=jdbc:mysql://mysql:3306/wildfly
+      - JDBC_USERNAME=mysql
+      - JDBC_PASSWORD=mysql
+    links:
+      - mysql
 
-.PHONY: sonar
-sonar:
-	@mvn -Dsonar.host.url=http://sonarqube.buffalo-coders.org:9000 sonar:sonar
+  frontend:
+    image: ${rootArtifactId}-frontend
+    ports:
+     - "28080:8080"
+    depends_on:
+      - backend
+    networks:
+      - ${rootArtifactId}
 
-.PHONY: test
-test: verify
-
-.PHONY: verify
-verify:
-	@mvn verify
+networks:
+  ${rootArtifactId}:

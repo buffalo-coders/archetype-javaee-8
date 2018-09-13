@@ -21,9 +21,9 @@ under the License.
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>9</version>
+    <groupId>org.buffalo-coders</groupId>
+    <artifactId>parent</artifactId>
+    <version>1-SNAPSHOT</version>
   </parent>
 
   <groupId>org.buffalo-coders.archetypes</groupId>
@@ -64,20 +64,19 @@ under the License.
     <url>http://github.com/buffalo-coders/javaee-8-archetype/tree/master</url>
   </scm>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-  </properties>
-
   <build>
-    <defaultGoal>install</defaultGoal>
     <pluginManagement>
       <plugins>
         <plugin>
           <artifactId>maven-archetype-plugin</artifactId>
           <version>3.0.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
+          <configuration>
+            <addDefaultExcludes>false</addDefaultExcludes>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>

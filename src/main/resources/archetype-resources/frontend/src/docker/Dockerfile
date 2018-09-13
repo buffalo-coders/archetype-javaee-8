@@ -10,34 +10,13 @@
 #   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
+# oftware distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
 #
 
-default: verify
-
-.PHONY: clean
-clean:
-	@mvn clean
-
-.PHONY: deploy-local
-deploy-local:
-	@mvn -Dmaven.test.skip=true -DskipTests=true -DaltDeploymentRepository=releases::default::http://archiva.buffalo-coders.org:7000/repository/internal/ deploy
-
-.PHONY: install
-install:
-	@mvn install
-
-.PHONY: sonar
-sonar:
-	@mvn -Dsonar.host.url=http://sonarqube.buffalo-coders.org:9000 sonar:sonar
-
-.PHONY: test
-test: verify
-
-.PHONY: verify
-verify:
-	@mvn verify
+FROM        buffalo-coders/wildfly
+ARG         WAR
+COPY        ${WAR} ${WAR_DIR}

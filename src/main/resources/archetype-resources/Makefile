@@ -17,34 +17,49 @@
 # under the License.
 #
 
-default: install
+default: verify
 
 .PHONY: clean
 clean:
 	@mvn clean
 
+.PHONY: deploy-local
+deploy-local:
+	@mvn -Dmaven.test.skip=true -DskipTests=true -DaltDeploymentRepository=releases::default::http://archiva.buffalo-coders.org:7000/repository/internal/ deploy
+
+.PHONY: docker
+docker: docker-build
+
+.PHONY: docker-build
+docker-build:
+	@mvn --projects backend,frontend exec:exec@docker-build
+
+.PHONY: docker-push
+docker-push:
+	@mvn --projects backend,frontend exec:exec@docker-push
+
 .PHONY: install
-install: clean
+install:
 	@mvn install
 
-.PHONY: install-fast
-install-fast: clean
-	@mvn -Dmaven.test.skip=true -DskipTests=true install
-
-.PHONY: run
-run: run-thorntail
-
-.PHONY: run-thorntail
-run-thorntail: clean
-	@mvn io.thorntail:thorntail-maven-plugin:run
+.PHONY: sonar
+sonar:
+	@mvn -Dsonar.host.url=http://sonarqube.buffalo-coders.org:9000 sonar:sonar
 
 .PHONY: test
-test: verify
+test: test-ut test-it
 
-.PHONY: validate
-validate: clean
-	@mvn validate
+.PHONY: test-ut
+test-ut: verify
+
+.PHONY: test-it
+test-it:
+	@mvn --activate-profiles run-it verify
+
+.PHONY: test-uat
+test-uat:
+	@mvn --activate-profiles run-uat verify
 
 .PHONY: verify
-verify: clean
+verify:
 	@mvn verify
