@@ -27,9 +27,21 @@ clean:
 deploy-local:
 	@mvn -Dmaven.test.skip=true -DskipTests=true -DaltDeploymentRepository=releases::default::http://archiva.buffalo-coders.org:7000/repository/internal/ deploy
 
+.PHONY: display-updates
+display-updates:
+	@mvn -Dmaven.version.rules=https://raw.githubusercontent.com/buffalo-coders/parent/master/src/main/resources/versions-maven-plugin.rules.xml \
+		versions:display-dependency-updates \
+		versions:display-parent-updates \
+		versions:display-plugin-updates \
+		versions:display-property-updates
+
 .PHONY: install
 install:
 	@mvn install
+
+.PHONY: release
+release: gpg-init no-git-changes
+	@mvn --batch-mode --activate-profiles sonatype-oss-release release:prepare release:perform
 
 .PHONY: sonar
 sonar:
