@@ -23,7 +23,7 @@ under the License.
   <parent>
     <groupId>org.buffalo-coders</groupId>
     <artifactId>parent</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>2</version>
   </parent>
 
   <groupId>org.buffalo-coders.archetypes</groupId>
